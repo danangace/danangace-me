@@ -14,11 +14,19 @@ const spanClass = 'text-gray-400 hover:text-neutral-700'
       <NuxtLink to="/projects">
         <span :class="spanClass">Projects</span>
       </NuxtLink>
-      <NuxtLink to="/about">
-        <span :class="spanClass">Github Logo</span>
+      <NuxtLink to="https://github.com/danangace">
+        <Icon
+          name="grommet-icons:github"
+          style="width: 24px"
+          :class="spanClass"
+        />
       </NuxtLink>
-      <NuxtLink to="/about">
-        <span :class="spanClass">LinkedIn</span>
+      <NuxtLink to="https://www.linkedin.com/in/danangbahari/">
+        <Icon
+          name="grommet-icons:linkedin"
+          style="width: 24px"
+          :class="spanClass"
+        />
       </NuxtLink>
     </nav>
   </header>

@@ -18,6 +18,16 @@ export default defineConfig([
   tseslint.configs.recommended,
   pluginVue.configs['flat/essential'],
   {
+    rules: {
+      'vue/multi-word-component-names': [
+        'error',
+        {
+          ignores: ['index', 'defaults', 'app'],
+        },
+      ],
+    },
+  },
+  {
     files: ['**/*.vue'],
     languageOptions: { parserOptions: { parser: tseslint.parser } },
   },

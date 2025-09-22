@@ -5,9 +5,11 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
+
   vite: {
     plugins: [tailwindcss()],
   },
+
   app: {
     head: {
       title: 'Danang Putra Bahari - Frontend Developer',
@@ -26,4 +28,6 @@ export default defineNuxtConfig({
       ],
     },
   },
+
+  modules: ['@nuxt/icon'],
 })
