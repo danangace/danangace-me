@@ -1,69 +1,73 @@
 <script setup lang="ts">
-const content = [
-  {
-    title: 'Working at',
-    tags: [
-      {
-        name: 'Sekolah.mu',
-        noname: true,
-        url: 'https://www.sekolah.mu/',
-        logo: 'https://cdn.sekolah.mu/assets/home/sekolahmu_logo.svg',
-      },
-    ],
-  },
-  {
-    title: 'Current Tech Stack',
-    tags: [
-      {
-        name: 'Vue',
-        noname: false,
-        url: 'https://vuejs.org/',
-        logo: 'https://vuejs.org/logo.svg',
-      },
-      {
-        name: 'Nuxt',
-        noname: false,
-        url: 'https://nuxt.com/',
-        logo: 'https://nuxt.com/assets/design-kit/icon-green.svg',
-      },
-      {
-        name: 'Vite',
-        noname: false,
-        url: 'https://vitejs.dev/',
-        logo: 'https://vitejs.dev/logo.svg',
-      },
-      {
-        name: 'Vitest',
-        noname: false,
-        url: 'https://vitest.dev/',
-        logo: 'https://github.com/vitest-dev.png',
-      },
-      {
-        name: 'VueUse',
-        noname: false,
-        url: 'https://vueuse.org/',
-        logo: 'https://github.com/vueuse.png',
-      },
-    ],
-  },
-  {
-    title: 'Languages',
-    tags: [
-      {
-        name: 'JavaScript',
-        noname: false,
-        url: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript',
-        logo: 'https://raw.githubusercontent.com/github/explore/refs/heads/main/topics/javascript/javascript.png',
-      },
-      {
-        name: 'TypeScript',
-        noname: false,
-        url: 'https://www.typescriptlang.org/',
-        logo: 'https://www.typescriptlang.org/icons/icon-48x48.png',
-      },
-    ],
-  },
-]
+import { computed } from 'vue'
+
+const content = computed(() => {
+  return [
+    {
+      title: 'Working at',
+      tags: [
+        {
+          name: 'Sekolah.mu',
+          noname: true,
+          url: 'https://www.sekolah.mu/',
+          logo: 'https://cdn.sekolah.mu/assets/home/sekolahmu_logo.svg',
+        },
+      ],
+    },
+    {
+      title: 'Current Tech Stack',
+      tags: [
+        {
+          name: 'Vue',
+          noname: false,
+          url: 'https://vuejs.org/',
+          logo: 'https://vuejs.org/logo.svg',
+        },
+        {
+          name: 'Nuxt',
+          noname: false,
+          url: 'https://nuxt.com/',
+          logo: 'https://nuxt.com/assets/design-kit/icon-green.svg',
+        },
+        {
+          name: 'Vite',
+          noname: false,
+          url: 'https://vitejs.dev/',
+          logo: 'https://vitejs.dev/logo.svg',
+        },
+        {
+          name: 'Vitest',
+          noname: false,
+          url: 'https://vitest.dev/',
+          logo: 'https://github.com/vitest-dev.png',
+        },
+        {
+          name: 'VueUse',
+          noname: false,
+          url: 'https://vueuse.org/',
+          logo: 'https://github.com/vueuse.png',
+        },
+      ],
+    },
+    {
+      title: 'Languages',
+      tags: [
+        {
+          name: 'JavaScript',
+          noname: false,
+          url: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript',
+          logo: 'https://raw.githubusercontent.com/github/explore/refs/heads/main/topics/javascript/javascript.png',
+        },
+        {
+          name: 'TypeScript',
+          noname: false,
+          url: 'https://www.typescriptlang.org/',
+          logo: 'https://www.typescriptlang.org/icons/icon-48x48.png',
+        },
+      ],
+    },
+  ]
+})
 </script>
 
 <template>
@@ -107,29 +111,43 @@ const content = [
     </p>
     <div class="py-12 slide-enter-top">
       <p>Find me on</p>
-      <div class="flex flex-wrap gap-x-2 py-4">
-        <a class="porse" href="/">Twitter</a>
+      <div class="flex flex-wrap gap-2 py-4">
+        <a
+          class="porse"
+          href="https://x.com/danangace"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Icon name="logos:twitter" style="width: 24px" />
+          X (Twitter)
+        </a>
         <a
           class="porse"
           href="https://www.instagram.com/danangace/"
           target="_blank"
           rel="noopener noreferrer"
-          >Instagram</a
         >
+          <Icon name="logos:instagram-icon" style="width: 24px" />
+          Instagram
+        </a>
         <a
           class="porse"
           href="https://github.com/danangace"
           target="_blank"
           rel="noopener noreferrer"
-          >Github</a
         >
+          <Icon name="grommet-icons:github" style="width: 24px" />
+          Github
+        </a>
         <a
           class="porse"
           href="https://www.linkedin.com/in/danangbahari/"
           target="_blank"
           rel="noopener noreferrer"
-          >LinkedIn</a
         >
+          <Icon name="logos:linkedin-icon" style="width: 24px" />
+          LinkedIn
+        </a>
       </div>
       <p>
         Or mail me to
