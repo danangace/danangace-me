@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-
 const content = [
   {
     title: 'Working at',
@@ -66,37 +64,18 @@ const content = [
     ],
   },
 ]
-
-const slideEnterActive = ref(false)
-
-const activateSlideEnter = () => {
-  slideEnterActive.value = true
-}
-
-setTimeout(() => {
-  activateSlideEnter()
-}, 100)
 </script>
 
 <template>
   <section>
-    <h1
-      class="slide-enter-top text-2xl font-bold mb-6 md:mb-8 md:text-4xl"
-      :class="{ active: slideEnterActive }"
-    >
+    <h1 class="text-2xl font-bold mb-6 md:mb-8 md:text-4xl">
       Danang Putra Bahari
     </h1>
-    <p
-      class="leading-[2] slide-enter-top"
-      :class="{ active: slideEnterActive }"
-    >
+    <p class="leading-[2] slide-enter-top">
       Hey I'm Danang Putra Bahari, work as Frontend Developer. Learning about
       web technology including design, database, backend, and DevOps.
     </p>
-    <section
-      class="slide-enter-top content-wrapper py-6 flex flex-col gap-y-2"
-      :class="{ active: slideEnterActive }"
-    >
+    <section class="content-wrapper py-6 flex flex-col gap-y-2">
       <div v-for="(item, index) in content" :key="index">
         <div class="flex items-center gap-x-2">
           <p class="flex flex-wrap gap-1 items-center">
@@ -116,31 +95,43 @@ setTimeout(() => {
         </div>
       </div>
     </section>
-    <p
-      class="leading-[2] slide-enter-top mb-6"
-      :class="{ active: slideEnterActive }"
-    >
+    <p class="leading-[2] mb-6">
       Dreaming up cool ideas and making them come true is where my passion lies.
       I am enthusiastic about building tools that help myself and others to be
       more productive and enjoy the process of crafting.
     </p>
-    <p
-      class="leading-[2] slide-enter-top mb-6"
-      :class="{ active: slideEnterActive }"
-    >
+    <p class="leading-[2] mb-6">
       Outside of programming, I enjoy doing games and sports. I also spent my
       time with my family (wife and son). I am trying to
-      <a class="porse" href="/">list my book</a> that interesting for me. Also,
-      in case you are interested, here are the
-      <a class="porse" href="/">hardware/software</a> I use.
+      <a class="porse" href="/books">list my book</a> that interesting for me.
+      Also, in case you are interested, here are the
+      <a class="porse" href="/tools">hardware/software</a> I use.
     </p>
-    <div class="py-12 slide-enter-top" :class="{ active: slideEnterActive }">
+    <div class="py-12 slide-enter-top">
       <p>Find me on</p>
       <div class="flex flex-wrap gap-x-2 py-4">
         <a class="porse" href="/">Twitter</a>
-        <a class="porse" href="/">Instagram</a>
-        <a class="porse" href="/">Github</a>
-        <a class="porse" href="/">LinkedIn</a>
+        <a
+          class="porse"
+          href="https://www.instagram.com/danangace/"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Instagram</a
+        >
+        <a
+          class="porse"
+          href="https://github.com/danangace"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Github</a
+        >
+        <a
+          class="porse"
+          href="https://www.linkedin.com/in/danangbahari/"
+          target="_blank"
+          rel="noopener noreferrer"
+          >LinkedIn</a
+        >
       </div>
       <p>
         Or mail me to
@@ -151,25 +142,3 @@ setTimeout(() => {
     </div>
   </section>
 </template>
-
-<style scoped>
-.slide-enter-top {
-  transform: translateY(-100%);
-  opacity: 0;
-  transition:
-    transform 1s ease-in-out,
-    opacity 1s ease-in-out;
-}
-
-.slide-enter-top.active {
-  transform: translateY(0);
-  opacity: 1;
-}
-
-.porse {
-  font-weight: inherit;
-  text-decoration: none;
-  border-bottom: 1px solid #b9b9b9;
-  transition: border 0.3s ease-in-out;
-}
-</style>
