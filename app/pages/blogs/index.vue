@@ -1,5 +1,10 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div>Ini halaman Blog</div>
+  <section>
+    <h1 class="text-4xl font-bold mb-8">Blog Space</h1>
+    <section class="py-6">
+      <p>Page is under construction...</p>
+    </section>
+  </section>
 </template>

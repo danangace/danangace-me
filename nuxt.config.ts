@@ -29,5 +29,9 @@ export default defineNuxtConfig({
     },
   },
 
+  imports: {
+    autoImport: true,
+  },
+
   modules: ['@nuxt/icon'],
 })

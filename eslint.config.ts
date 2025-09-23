@@ -22,7 +22,7 @@ export default defineConfig([
       'vue/multi-word-component-names': [
         'error',
         {
-          ignores: ['index', 'defaults', 'app'],
+          ignores: ['index', 'default', 'app'],
         },
       ],
     },
