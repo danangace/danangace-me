@@ -2,9 +2,9 @@
 
 <template>
   <section>
-    <h1 class="text-4xl font-bold mb-8">Projects Show Case</h1>
+    <PageHeader title="Project Show Case" />
     <section class="py-6">
-      <p>Page is under construction...</p>
+      <p>Page is under cooking...</p>
     </section>
   </section>
 </template>

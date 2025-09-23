@@ -68,9 +68,7 @@ const content = [
 
 <template>
   <section>
-    <h1 class="text-2xl font-bold mb-6 md:mb-8 md:text-4xl">
-      Danang Putra Bahari
-    </h1>
+    <PageHeader title="Danang Putra Bahari" />
     <p class="leading-[2] slide-enter-top">
       Hey I'm Danang Putra Bahari, work as Frontend Developer. Learning about
       web technology including design, database, backend, and DevOps.

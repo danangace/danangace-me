@@ -2,7 +2,7 @@
 
 <template>
   <section>
-    <PageHeader title="Blog List" />
+    <PageHeader title="Books" />
     <section class="py-6">
       <p>Page is under cooking...</p>
     </section>
