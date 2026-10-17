@@ -1,5 +1,5 @@
 // Content for the "A closer look" tabs on the home page.
-// Source: Resume_Danang_2026.pdf. Licenses & certifications is still empty.
+// Source: Resume_Danang_2026.pdf and LinkedIn (certifications).
 
 import { profile } from './profile'
 
@@ -108,7 +108,20 @@ export const background: Tab[] = [
     label: 'Licenses & certifications',
     layout: 'list',
     empty: 'Licenses and certifications are coming soon.',
-    entries: [],
+    entries: [
+      {
+        title: 'AWS Certified Cloud Practitioner',
+        subtitle: 'Amazon Web Services (AWS)',
+        period: 'Issued Dec 2025',
+        note: 'Expires Dec 2028 · Credential ID 78cc4f1b1adc480a8c6032b0df4f402b',
+        url: 'https://cp.certmetrics.com/amazon/en/public/verify/credential/78cc4f1b1adc480a8c6032b0df4f402b',
+      },
+      {
+        title: 'Fullstack JavaScript Developer',
+        subtitle: 'Hacktiv8 Indonesia',
+        period: 'Issued Jan 2020',
+      },
+    ],
   },
   {
     id: 'education',
