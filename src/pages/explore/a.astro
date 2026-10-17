@@ -1,0 +1,411 @@
+---
+import ExploreLayout from '../../layouts/ExploreLayout.astro'
+import DMark from '../../components/explore/DMark.astro'
+import { profile } from '../../data/profile'
+
+// Split the statement at build time so each word can light up on scroll.
+const words = profile.passion.split(' ')
+---
+
+<ExploreLayout title="Direction A: Still" themeColor="#f5f5f7">
+  <Fragment slot="head">
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400..900&display=swap"
+    />
+  </Fragment>
+
+  <header class="nav">
+    <a href="/explore" class="nav-home" aria-label="Back to directions">
+      <DMark class="nav-mark" />
+    </a>
+    <nav aria-label="Primary">
+      {profile.nav.map((l) => (
+        <a href={l.href}>{l.label}</a>
+      ))}
+      <a
+        href={profile.socials[0].url}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        GitHub
+      </a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <DMark class="hero-mark" />
+      <div class="hero-copy">
+        <h1>{profile.name}</h1>
+        <p>{profile.intro}</p>
+      </div>
+    </section>
+
+    <section class="statement" id="statement" aria-label="What drives me">
+      <p class="reveal" style={`--n:${words.length}`}>
+        {words.map((w, i) => (
+          <>
+            <span style={`--i:${i}`}>{w}</span>{' '}
+          </>
+        ))}
+      </p>
+    </section>
+
+    <section class="bento" id="bento" aria-label="Work and stack">
+      <article class="tile tile-stack">
+        <h2>Daily tools</h2>
+        <ul class="big-list">
+          {profile.stack.map((s) => (
+            <li>
+              <a href={s.url} target="_blank" rel="noopener noreferrer">
+                {s.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+        <p class="tile-note">
+          Written in{' '}
+          {profile.languages.map((l, i) => (
+            <>
+              {i > 0 && ' and '}
+              <a href={l.url} target="_blank" rel="noopener noreferrer">
+                {l.name}
+              </a>
+            </>
+          ))}
+          .
+        </p>
+      </article>
+
+      <article class="tile tile-work">
+        <h2>Building interfaces at</h2>
+        <a
+          class="work-link"
+          href={profile.work.url}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {profile.work.name}
+        </a>
+      </article>
+
+      <article class="tile tile-life">
+        <p>{profile.offline}</p>
+        <p class="tile-links">
+          <a href={profile.links.books}>Books I'm listing</a>
+          <a href={profile.links.tools}>Hardware and software I use</a>
+        </p>
+      </article>
+    </section>
+  </main>
+
+  <footer class="contact" id="contact">
+    <p class="contact-lead">Say hello</p>
+    <a class="contact-mail" href={`mailto:${profile.email}`}>
+      {profile.email}
+    </a>
+    <p class="contact-social">
+      {profile.socials.map((s) => (
+        <a href={s.url} target="_blank" rel="noopener noreferrer">
+          {s.label}
+        </a>
+      ))}
+    </p>
+  </footer>
+</ExploreLayout>
+
+<style is:global>
+  :root {
+    --bg: #f5f5f7;
+    --surface: #ffffff;
+    --ink: #1d1d1f;
+    --muted: #6e6e73;
+    --accent: #2230f0;
+    --gutter: clamp(1.25rem, 5vw, 4.5rem);
+  }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Schibsted Grotesk', system-ui, sans-serif;
+    line-height: 1.5;
+  }
+</style>
+
+<style>
+  /* ---------- Navigation: translucent layer, content scrolls under it ---------- */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 3.25rem;
+    padding: 0 var(--gutter);
+    background: rgb(245 245 247 / 0.72);
+    backdrop-filter: blur(20px) saturate(180%);
+  }
+  :global(.nav-mark) {
+    display: block;
+    height: 1.5rem;
+  }
+  .nav nav {
+    display: flex;
+    gap: 1.75rem;
+    font-size: 0.875rem;
+  }
+  .nav nav a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 150ms ease-out;
+  }
+  .nav nav a:hover {
+    color: var(--ink);
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    .nav {
+      background: var(--bg);
+      backdrop-filter: none;
+    }
+  }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: calc(100svh - 3.25rem);
+    padding: 0 var(--gutter) clamp(2rem, 6vh, 4rem);
+    overflow: hidden;
+  }
+  :global(.hero-mark) {
+    position: absolute;
+    top: 6vh;
+    right: calc(var(--gutter) - 1rem);
+    height: min(66vh, 70vw);
+    color: var(--accent);
+  }
+  .hero-copy {
+    position: relative;
+  }
+  h1 {
+    font-size: clamp(3.5rem, 11.5vw, 11.5rem);
+    font-weight: 700;
+    line-height: 0.92;
+    letter-spacing: -0.048em;
+    max-width: 8ch;
+  }
+  .hero-copy p {
+    max-width: 30rem;
+    margin-top: 1.75rem;
+    font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+    color: var(--muted);
+  }
+
+  /* The one orchestrated moment: the three parts of the D settle into place. */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.hero-mark) :global(path) {
+      transform-box: fill-box;
+      animation: settle 1.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    :global(.hero-mark) :global(.bar) {
+      --from: translateY(-115%);
+    }
+    :global(.hero-mark) :global(.ring) {
+      --from: translateX(-35%) scale(0.92);
+      animation-delay: 120ms;
+    }
+    :global(.hero-mark) :global(.pill) {
+      --from: translateX(-260%);
+      animation-delay: 260ms;
+    }
+    @keyframes settle {
+      from {
+        transform: var(--from);
+        opacity: 0;
+      }
+      40% {
+        opacity: 1;
+      }
+      to {
+        transform: none;
+        opacity: 1;
+      }
+    }
+  }
+
+  /* ---------- Statement: words light up with scroll ---------- */
+  .statement {
+    padding: clamp(6rem, 24vh, 14rem) var(--gutter);
+  }
+  .reveal {
+    max-width: 21em;
+    font-size: clamp(1.9rem, 4.6vw, 4.25rem);
+    font-weight: 650;
+    line-height: 1.08;
+    letter-spacing: -0.034em;
+    text-wrap: pretty;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .reveal span {
+        opacity: 0.16;
+        animation: lit linear both;
+        animation-timeline: view();
+        animation-range: entry calc(var(--i) * (55% / var(--n)) + 8%) entry
+          calc(var(--i) * (55% / var(--n)) + 30%);
+      }
+      @keyframes lit {
+        to {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  /* ---------- Uneven bento ---------- */
+  .bento {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 0.75rem;
+    padding: 0 var(--gutter);
+  }
+  .tile {
+    border-radius: 1.75rem;
+    padding: clamp(1.5rem, 3vw, 2.75rem);
+    background: var(--surface);
+  }
+  .tile h2 {
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    color: var(--muted);
+  }
+  .tile-stack {
+    grid-row: span 2;
+    min-height: 34rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: var(--accent);
+    color: #fff;
+  }
+  .tile-stack h2,
+  .tile-stack .tile-note {
+    color: rgb(255 255 255 / 0.72);
+  }
+  .big-list {
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0;
+    font-size: clamp(2.5rem, 6.4vw, 6rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.045em;
+  }
+  .big-list a {
+    text-decoration: none;
+    transition: opacity 150ms ease-out;
+  }
+  .big-list:hover a {
+    opacity: 0.45;
+  }
+  .big-list a:hover {
+    opacity: 1;
+  }
+  .tile-note {
+    font-size: 1rem;
+  }
+  .tile-work {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 3rem;
+  }
+  .work-link {
+    font-size: clamp(2rem, 4.4vw, 4rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    text-decoration: none;
+    color: var(--accent);
+  }
+  .work-link:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 0.06em;
+    text-underline-offset: 0.12em;
+  }
+  .tile-life {
+    background: transparent;
+    padding-left: 0;
+    padding-right: 0;
+    font-size: clamp(1.1rem, 1.5vw, 1.35rem);
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+  }
+  .tile-life p {
+    max-width: 28rem;
+  }
+  .tile-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-top: 1.5rem;
+    color: var(--accent);
+  }
+  .tile-links a {
+    text-decoration: none;
+  }
+  .tile-links a:hover {
+    text-decoration: underline;
+  }
+  @media (max-width: 760px) {
+    .bento {
+      grid-template-columns: 1fr;
+    }
+    .tile-stack {
+      grid-row: auto;
+      min-height: 26rem;
+    }
+  }
+
+  /* ---------- Contact ---------- */
+  .contact {
+    padding: clamp(6rem, 22vh, 12rem) var(--gutter) 3rem;
+  }
+  .contact-lead {
+    color: var(--muted);
+    font-size: 1.1rem;
+  }
+  .contact-mail {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: clamp(1.6rem, 6.4vw, 6rem);
+    font-weight: 700;
+    letter-spacing: -0.045em;
+    line-height: 1.05;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+  .contact-mail:hover {
+    color: var(--accent);
+  }
+  .contact-social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    margin-top: 3rem;
+    font-size: 0.9375rem;
+  }
+  .contact-social a {
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .contact-social a:hover {
+    color: var(--ink);
+  }
+</style>

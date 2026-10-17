@@ -1,0 +1,277 @@
+---
+import ExploreLayout from '../../layouts/ExploreLayout.astro'
+import DMark from '../../components/explore/DMark.astro'
+import { profile } from '../../data/profile'
+---
+
+<ExploreLayout title="Direction B: Chapters" themeColor="#f5b83d">
+  <Fragment slot="head">
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Instrument+Sans:wght@400..700&display=swap"
+    />
+  </Fragment>
+
+  <header class="nav">
+    <a href="/explore" aria-label="Back to directions">
+      <DMark class="nav-mark" />
+    </a>
+    <nav aria-label="Primary">
+      {profile.nav.map((l) => (
+        <a href={l.href}>{l.label}</a>
+      ))}
+      <a
+        href={profile.socials[0].url}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        GitHub
+      </a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="chapter c-hero">
+      <h1>
+        <span>Danang</span>
+        <span>Putra</span>
+        <span>Bahari</span>
+      </h1>
+      <p class="lede">
+        {profile.role}, learning the rest of the web: design, database, backend
+        and DevOps.
+      </p>
+    </section>
+
+    <section class="chapter c-work" id="work">
+      <p class="big">
+        I build interfaces at{' '}
+        <a href={profile.work.url} target="_blank" rel="noopener noreferrer">
+          {profile.work.name}
+        </a>
+        .
+      </p>
+      <p class="body">{profile.passion}</p>
+    </section>
+
+    <section class="chapter c-stack" id="stack">
+      <p class="big">
+        Every day I reach for{' '}
+        {profile.stack.map((s, i) => (
+          <>
+            <a href={s.url} target="_blank" rel="noopener noreferrer">
+              {s.name}
+            </a>
+            {i < profile.stack.length - 2
+              ? ', '
+              : i === profile.stack.length - 2
+                ? ' and '
+                : ''}
+          </>
+        ))}
+        , written in{' '}
+        {profile.languages.map((l, i) => (
+          <>
+            {i > 0 && ' and '}
+            <a href={l.url} target="_blank" rel="noopener noreferrer">
+              {l.name}
+            </a>
+          </>
+        ))}
+        .
+      </p>
+    </section>
+
+    <section class="chapter c-life" id="life">
+      <p class="big">{profile.offline}</p>
+      <p class="body links">
+        <a href={profile.links.books}>The books I'm listing</a>
+        <a href={profile.links.tools}>The hardware and software I use</a>
+      </p>
+    </section>
+
+    <section class="chapter c-contact" id="contact">
+      <p class="body">Say hello</p>
+      <a class="mail" href={`mailto:${profile.email}`}>
+        {profile.email}
+      </a>
+      <p class="body socials">
+        {profile.socials.map((s) => (
+          <a href={s.url} target="_blank" rel="noopener noreferrer">
+            {s.label}
+          </a>
+        ))}
+      </p>
+    </section>
+  </main>
+</ExploreLayout>
+
+<style is:global>
+  body {
+    font-family: 'Instrument Sans', system-ui, sans-serif;
+    line-height: 1.5;
+    background: #131313;
+  }
+</style>
+
+<style>
+  .nav {
+    position: absolute;
+    inset: 0 0 auto 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem clamp(1.25rem, 4vw, 3rem);
+    color: #16130a;
+  }
+  :global(.nav-mark) {
+    display: block;
+    height: 1.75rem;
+  }
+  .nav nav {
+    display: flex;
+    gap: 1.5rem;
+    font-weight: 500;
+  }
+  .nav nav a {
+    text-decoration: none;
+  }
+  .nav nav a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+
+  .chapter {
+    --pad: clamp(1.25rem, 4vw, 3rem);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 2rem;
+    min-height: 100svh;
+    padding: 7rem var(--pad) calc(var(--pad) + 2rem);
+    border-radius: 2rem 2rem 0 0;
+    margin-top: -2rem;
+  }
+  @media (max-width: 520px) {
+    .nav nav a:last-child {
+      display: none;
+    }
+  }
+  .chapter:first-child {
+    margin-top: 0;
+    border-radius: 0;
+  }
+  /* Chapters pile up like pages when the viewport is big enough to hold each one. */
+  @media (min-width: 900px) and (min-height: 700px) {
+    .chapter {
+      position: sticky;
+      top: 0;
+    }
+    .c-contact {
+      position: relative;
+    }
+  }
+
+  .big {
+    max-width: 17em;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-variation-settings: 'wdth' 88;
+    font-size: clamp(2.2rem, 6.2vw, 6.4rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.012em;
+    text-wrap: balance;
+  }
+  .big a {
+    text-decoration: underline;
+    text-decoration-thickness: 0.07em;
+    text-underline-offset: 0.12em;
+  }
+  .big a:hover {
+    text-decoration-style: wavy;
+  }
+  .body {
+    max-width: 34rem;
+    font-size: clamp(1.05rem, 1.4vw, 1.3rem);
+    line-height: 1.5;
+  }
+
+  .c-hero {
+    background: #f5b83d;
+    color: #16130a;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+  h1 {
+    display: flex;
+    flex-direction: column;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-variation-settings: 'wdth' 75;
+    font-size: clamp(4.5rem, min(22vw, 25svh), 22rem);
+    font-weight: 800;
+    line-height: 0.84;
+    letter-spacing: -0.012em;
+  }
+  .lede {
+    max-width: 24rem;
+    font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+    font-weight: 500;
+    line-height: 1.35;
+  }
+  .c-work {
+    background: #0d4f3c;
+    color: #eaf7ee;
+  }
+  .c-work .body {
+    opacity: 0.85;
+  }
+
+  .c-stack {
+    background: #cdbdff;
+    color: #1b1033;
+  }
+
+  .c-life {
+    background: #2347ff;
+    color: #fff;
+  }
+  .links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .links a {
+    width: fit-content;
+    text-underline-offset: 0.2em;
+  }
+
+  .c-contact {
+    background: #131313;
+    color: #f3f1ea;
+    border-top: 0;
+  }
+  .mail {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-variation-settings: 'wdth' 80;
+    font-size: clamp(1.8rem, 7.4vw, 8rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+  .mail:hover {
+    color: #f5b83d;
+  }
+  .socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    opacity: 0.8;
+  }
+</style>

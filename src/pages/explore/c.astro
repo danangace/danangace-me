@@ -1,0 +1,566 @@
+---
+import ExploreLayout from '../../layouts/ExploreLayout.astro'
+import DMark from '../../components/explore/DMark.astro'
+import { profile } from '../../data/profile'
+---
+
+<ExploreLayout title="Direction C: Tactile" themeColor="#e4e7e2">
+  <Fragment slot="head">
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400..700&display=swap"
+    />
+  </Fragment>
+
+  <main>
+    <section class="stage" id="stage">
+      <header class="top">
+        <p class="hint" id="hint" aria-live="polite">
+          Drag the pieces together.
+        </p>
+        <nav aria-label="Primary">
+          <a href="/explore">Directions</a>
+          {profile.nav.map((l) => (
+            <a href={l.href}>{l.label}</a>
+          ))}
+          <a
+            href={profile.socials[0].url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub
+          </a>
+        </nav>
+      </header>
+
+      <div class="assembly" id="assembly">
+        <div class="piece" data-piece="bar">
+          <DMark part="bar" />
+        </div>
+        <div class="piece" data-piece="ring">
+          <DMark part="ring" />
+        </div>
+        <div class="piece" data-piece="pill">
+          <DMark part="pill" />
+        </div>
+      </div>
+
+      <div class="caption">
+        <h1>{profile.name}</h1>
+        <p>{profile.role}</p>
+        <div class="controls">
+          <button type="button" id="assemble">
+            Assemble
+          </button>
+          <button type="button" id="scatter">
+            Scatter
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="content" id="content">
+      <p class="lead">{profile.intro}</p>
+
+      <p>
+        I build interfaces at{' '}
+        <a href={profile.work.url} target="_blank" rel="noopener noreferrer">
+          {profile.work.name}
+        </a>
+        , mostly with
+        <span class="chips">
+          {profile.stack.map((s) => (
+            <a
+              class="chip"
+              href={s.url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {s.name}
+            </a>
+          ))}
+        </span>
+        written in
+        <span class="chips">
+          {profile.languages.map((l) => (
+            <a
+              class="chip"
+              href={l.url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {l.name}
+            </a>
+          ))}
+        </span>
+        .
+      </p>
+
+      <p>{profile.passion}</p>
+
+      <p>
+        {profile.offline} I'm{' '}
+        <a href={profile.links.books}>listing the books</a> I find interesting,
+        and here is the <a href={profile.links.tools}>hardware and software</a>{' '}
+        I use.
+      </p>
+
+      <p class="find">
+        Find me on{' '}
+        {profile.socials.map((s, i) => (
+          <>
+            <a href={s.url} target="_blank" rel="noopener noreferrer">
+              {s.label}
+            </a>
+            {i < profile.socials.length - 1 ? ', ' : ''}
+          </>
+        ))}
+        , or write to <a href={`mailto:${profile.email}`}>{profile.email}</a>.
+      </p>
+    </section>
+  </main>
+</ExploreLayout>
+
+<script>
+  import { animate, motionValue, type MotionValue } from 'motion'
+
+  type Controls = { stop: () => void }
+  type Piece = {
+    el: HTMLElement
+    x: MotionValue<number>
+    y: MotionValue<number>
+    ax?: Controls
+    ay?: Controls
+    // Visible extent of the piece inside the shared 84x100 grid, as fractions.
+    box: { x0: number; x1: number; y0: number; y1: number }
+    scatter: [number, number] // offset from home as fractions of stage width/height
+  }
+
+  const BOXES = {
+    bar: { x0: 8 / 84, x1: 26.25 / 84, y0: 0.08, y1: 0.92 },
+    ring: { x0: 33.5 / 84, x1: 75.5 / 84, y0: 0.08, y1: 0.92 },
+    pill: { x0: 33.5 / 84, x1: 51.8 / 84, y0: 0.409, y1: 0.628 },
+  }
+  const SCATTER: Record<string, [number, number]> = {
+    bar: [-0.3, -0.16],
+    ring: [0.26, 0.1],
+    pill: [-0.08, 0.2],
+  }
+  const EDGE = 10 // px kept clear of the stage edge
+  const reduceMotion = window.matchMedia(
+    '(prefers-reduced-motion: reduce)',
+  ).matches
+
+  const stage = document.getElementById('stage') as HTMLElement
+  const assembly = document.getElementById('assembly') as HTMLElement
+  const hint = document.getElementById('hint') as HTMLElement
+
+  const pieces: Piece[] = [
+    ...document.querySelectorAll<HTMLElement>('[data-piece]'),
+  ].map((el) => {
+    const name = el.dataset.piece as keyof typeof BOXES
+    return {
+      el,
+      x: motionValue(0),
+      y: motionValue(0),
+      box: BOXES[name],
+      scatter: SCATTER[name],
+    }
+  })
+
+  const render = (p: Piece) => {
+    p.el.style.transform = `translate3d(${p.x.get()}px, ${p.y.get()}px, 0)`
+  }
+
+  /** Range the piece's translation may take so its visible part stays on stage. */
+  const bounds = (p: Piece) => {
+    const s = stage.getBoundingClientRect()
+    const a = assembly.getBoundingClientRect()
+    const left = a.left - s.left + p.box.x0 * a.width
+    const right = a.left - s.left + p.box.x1 * a.width
+    const top = a.top - s.top + p.box.y0 * a.height
+    const bottom = a.top - s.top + p.box.y1 * a.height
+    return {
+      minX: EDGE - left,
+      maxX: s.width - EDGE - right,
+      minY: EDGE - top,
+      maxY: s.height - EDGE - bottom,
+      w: s.width,
+      h: s.height,
+    }
+  }
+
+  const clamp = (v: number, lo: number, hi: number) =>
+    Math.min(hi, Math.max(lo, v))
+
+  /** Past an edge, follow the pointer less and less instead of stopping dead. */
+  const rubberband = (v: number, lo: number, hi: number, dim: number) => {
+    const c = 0.55
+    const over = v < lo ? v - lo : v > hi ? v - hi : 0
+    if (!over) return v
+    const eased = (Math.abs(over) * dim * c) / (dim + c * Math.abs(over))
+    return (v < lo ? lo : hi) + Math.sign(over) * eased
+  }
+
+  /** Where a flick at `v` px/s would come to rest (exponential deceleration). */
+  const project = (v: number, rate = 0.99) => ((v / 1000) * rate) / (1 - rate)
+
+  const spring = (momentum: boolean, velocity = 0) => ({
+    type: 'spring' as const,
+    bounce: reduceMotion ? 0 : momentum ? 0.22 : 0.12,
+    duration: 0.55,
+    velocity,
+  })
+
+  const isHome = (p: Piece) =>
+    Math.abs(p.x.get()) < 0.5 && Math.abs(p.y.get()) < 0.5
+
+  let dragging = false
+  let wasAssembled = false
+  const checkAssembled = () => {
+    if (dragging) return
+    const done = pieces.every(isHome)
+    if (done === wasAssembled) return
+    wasAssembled = done
+    stage.dataset.done = String(done)
+    hint.textContent = done
+      ? "That's me. Scroll for the rest."
+      : 'Drag the pieces together.'
+    if (done && !reduceMotion) {
+      animate(
+        assembly,
+        { scale: [1.03, 1] },
+        { type: 'spring', bounce: 0.35, duration: 0.7 },
+      )
+    }
+  }
+
+  const flyTo = (
+    p: Piece,
+    x: number,
+    y: number,
+    momentum = false,
+    vx = 0,
+    vy = 0,
+  ) => {
+    p.ax?.stop()
+    p.ay?.stop()
+    p.ax = animate(p.x, x, spring(momentum, vx))
+    p.ay = animate(p.y, y, spring(momentum, vy))
+  }
+
+  pieces.forEach((p) => {
+    p.x.on('change', () => render(p))
+    p.y.on('change', () => render(p))
+    p.x.on('animationComplete', checkAssembled)
+    p.y.on('animationComplete', checkAssembled)
+  })
+
+  const scatterNow = () => {
+    pieces.forEach((p) => {
+      const b = bounds(p)
+      p.x.set(clamp(p.scatter[0] * b.w, b.minX, b.maxX))
+      p.y.set(clamp(p.scatter[1] * b.h, b.minY, b.maxY))
+    })
+    wasAssembled = false
+    stage.dataset.done = 'false'
+  }
+
+  let zTop = 1
+
+  pieces.forEach((p) => {
+    let startX = 0
+    let startY = 0
+    let originX = 0
+    let originY = 0
+    let history: { t: number; x: number; y: number }[] = []
+
+    p.el.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0) return
+      e.preventDefault()
+      p.el.setPointerCapture(e.pointerId)
+      // Start from where the piece is on screen right now, mid-flight or not.
+      p.ax?.stop()
+      p.ay?.stop()
+      startX = e.clientX
+      startY = e.clientY
+      originX = p.x.get()
+      originY = p.y.get()
+      history = [{ t: e.timeStamp, x: originX, y: originY }]
+      dragging = true
+      p.el.classList.add('dragging')
+      p.el.style.zIndex = String(++zTop)
+    })
+
+    p.el.addEventListener('pointermove', (e) => {
+      if (!p.el.hasPointerCapture(e.pointerId)) return
+      const b = bounds(p)
+      const rawX = originX + (e.clientX - startX)
+      const rawY = originY + (e.clientY - startY)
+      p.x.set(rubberband(rawX, b.minX, b.maxX, b.w))
+      p.y.set(rubberband(rawY, b.minY, b.maxY, b.h))
+      history.push({ t: e.timeStamp, x: rawX, y: rawY })
+      while (history.length > 2 && e.timeStamp - history[0].t > 100)
+        history.shift()
+    })
+
+    const release = (e: PointerEvent) => {
+      if (!p.el.hasPointerCapture(e.pointerId)) return
+      p.el.releasePointerCapture(e.pointerId)
+      p.el.classList.remove('dragging')
+      dragging = false
+
+      // Only samples from the last 100ms count. If the pointer rested before
+      // release, the piece is not being thrown.
+      const recent = history.filter((h) => e.timeStamp - h.t <= 100)
+      let vx = 0
+      let vy = 0
+      if (recent.length >= 2 && e.type !== 'pointercancel') {
+        const first = recent[0]
+        const last = recent[recent.length - 1]
+        const dt = Math.max((last.t - first.t) / 1000, 0.001)
+        vx = (last.x - first.x) / dt
+        vy = (last.y - first.y) / dt
+      }
+
+      const b = bounds(p)
+      let tx = clamp(p.x.get() + project(vx), b.minX, b.maxX)
+      let ty = clamp(p.y.get() + project(vy), b.minY, b.maxY)
+      // Close enough to its place in the D once the throw is accounted for: land home.
+      const snap = assembly.getBoundingClientRect().width * 0.14
+      const snapped = Math.hypot(tx, ty) < snap
+      if (snapped) {
+        tx = 0
+        ty = 0
+      }
+      flyTo(p, tx, ty, !snapped, vx, vy)
+    }
+    p.el.addEventListener('pointerup', release)
+    p.el.addEventListener('pointercancel', release)
+  })
+
+  document.getElementById('assemble')?.addEventListener('click', () => {
+    pieces.forEach((p) => flyTo(p, 0, 0))
+  })
+  document.getElementById('scatter')?.addEventListener('click', () => {
+    pieces.forEach((p) => {
+      const b = bounds(p)
+      flyTo(
+        p,
+        clamp(p.scatter[0] * b.w, b.minX, b.maxX),
+        clamp(p.scatter[1] * b.h, b.minY, b.maxY),
+      )
+    })
+  })
+
+  window.addEventListener('resize', () => {
+    pieces.forEach((p) => {
+      const b = bounds(p)
+      p.x.set(clamp(p.x.get(), b.minX, b.maxX))
+      p.y.set(clamp(p.y.get(), b.minY, b.maxY))
+    })
+  })
+
+  scatterNow()
+</script>
+
+<style is:global>
+  :root {
+    --stone: #e4e7e2;
+    --ink: #17181a;
+    --ring: #ff5b3a;
+    --pill: #ffd23f;
+  }
+  body {
+    background: var(--stone);
+    color: var(--ink);
+    font-family: 'Familjen Grotesk', system-ui, sans-serif;
+    line-height: 1.5;
+  }
+</style>
+
+<style>
+  .stage {
+    position: relative;
+    height: 100svh;
+    min-height: 34rem;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .top {
+    position: absolute;
+    inset: 0 0 auto 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.25rem clamp(1.25rem, 4vw, 3rem);
+    font-size: 0.9375rem;
+    pointer-events: none;
+  }
+  .hint {
+    font-weight: 500;
+  }
+  .top nav {
+    display: flex;
+    gap: 1.25rem;
+    pointer-events: auto;
+  }
+  .top nav a {
+    text-decoration: none;
+    opacity: 0.6;
+    transition: opacity 150ms ease-out;
+  }
+  .top nav a:hover {
+    opacity: 1;
+  }
+
+  .assembly {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: min(56vh, 70vw);
+    aspect-ratio: 84 / 100;
+    translate: -50% -56%;
+  }
+  .piece {
+    position: absolute;
+    inset: 0;
+    touch-action: none;
+    pointer-events: none;
+    will-change: transform;
+  }
+  .piece :global(svg) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    transition:
+      transform 160ms cubic-bezier(0.2, 0, 0, 1),
+      filter 160ms ease-out;
+  }
+  .piece :global(path) {
+    pointer-events: auto;
+    cursor: grab;
+  }
+  .piece.dragging :global(path) {
+    cursor: grabbing;
+  }
+  .piece.dragging :global(svg) {
+    transform: scale(1.035);
+    filter: drop-shadow(0 14px 22px rgb(23 24 26 / 0.22));
+  }
+  .piece[data-piece='bar'] {
+    color: var(--ink);
+  }
+  .piece[data-piece='ring'] {
+    color: var(--ring);
+  }
+  .piece[data-piece='pill'] {
+    color: var(--pill);
+  }
+
+  .caption {
+    position: absolute;
+    left: clamp(1.25rem, 4vw, 3rem);
+    right: clamp(1.25rem, 4vw, 3rem);
+    bottom: clamp(1.25rem, 4vh, 2.5rem);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 1rem;
+    pointer-events: none;
+  }
+  h1 {
+    grid-column: 1;
+    font-size: clamp(2.4rem, 7vw, 6.5rem);
+    font-weight: 600;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+  }
+  .caption p {
+    grid-column: 1;
+    font-size: 1.125rem;
+    opacity: 0.65;
+  }
+  .controls {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    display: flex;
+    gap: 0.5rem;
+    pointer-events: auto;
+  }
+  .controls button {
+    font: inherit;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    padding: 0.55rem 1rem;
+    border: 1px solid rgb(23 24 26 / 0.28);
+    border-radius: 999px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    transition:
+      background-color 150ms ease-out,
+      transform 100ms ease-out;
+  }
+  .controls button:hover {
+    background: rgb(23 24 26 / 0.07);
+  }
+  .controls button:active {
+    transform: scale(0.97);
+  }
+  @media (max-width: 600px) {
+    .caption {
+      grid-template-columns: 1fr;
+    }
+    .controls {
+      grid-column: 1;
+      grid-row: auto;
+    }
+  }
+
+  .content {
+    max-width: 40rem;
+    margin: 0 auto;
+    padding: clamp(4rem, 14vh, 8rem) clamp(1.25rem, 4vw, 2rem)
+      clamp(5rem, 16vh, 9rem);
+    display: grid;
+    gap: 1.75rem;
+    font-size: 1.1875rem;
+    line-height: 1.6;
+  }
+  .content a {
+    text-decoration-thickness: 0.06em;
+    text-underline-offset: 0.18em;
+  }
+  .content a:hover {
+    color: var(--ring);
+  }
+  .lead {
+    font-size: clamp(1.7rem, 3.6vw, 2.5rem);
+    font-weight: 600;
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+  .chips {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    vertical-align: baseline;
+  }
+  .chip {
+    padding: 0 0.6rem;
+    border-radius: 999px;
+    background: rgb(23 24 26 / 0.08);
+    text-decoration: none;
+    font-size: 0.95em;
+    transition: background-color 150ms ease-out;
+  }
+  .content .chip:hover {
+    background: var(--pill);
+    color: var(--ink);
+  }
+</style>
