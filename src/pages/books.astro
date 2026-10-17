@@ -1,0 +1,34 @@
+---
+import { getCollection } from 'astro:content'
+import BaseLayout from '../layouts/BaseLayout.astro'
+import PageHeader from '../components/PageHeader.astro'
+import EntryList from '../components/EntryList.astro'
+import EmptyState from '../components/EmptyState.astro'
+
+const books = await getCollection('books')
+const label = {
+  reading: 'Reading',
+  finished: 'Finished',
+  'want-to-read': 'Want to read',
+}
+---
+
+<BaseLayout
+  title="Books - Danang Putra Bahari"
+  description="Books I'm reading, have finished or want to read."
+>
+  <PageHeader title="Books" lead="What I'm reading and what's next." />
+  {books.length ? (
+    <EntryList
+      items={books.map(({ data: b }) => ({
+        href: b.url,
+        external: true,
+        title: b.title,
+        meta: `${b.author} · ${label[b.status]}`,
+        note: b.note,
+      }))}
+    />
+  ) : (
+    <EmptyState message="The reading list is still being put together." />
+  )}
+</BaseLayout>

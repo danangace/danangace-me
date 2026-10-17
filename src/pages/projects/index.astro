@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import PageHeader from '../../components/PageHeader.astro'
+import EntryList from '../../components/EntryList.astro'
+import EmptyState from '../../components/EmptyState.astro'
+import { getProjects } from '../../lib/content'
+
+const projects = await getProjects()
+---
+
+<BaseLayout
+  title="Projects - Danang Putra Bahari"
+  description="Things I've built and the tools I made along the way."
+>
+  <PageHeader title="Projects" lead="Things I've built along the way." />
+  {projects.length ? (
+    <EntryList
+      items={projects.map((p) => ({
+        href: p.data.url ?? p.data.repo,
+        external: true,
+        title: p.data.title,
+        meta: `${p.data.year}${p.data.stack.length ? ` · ${p.data.stack.join(', ')}` : ''}`,
+        note: p.data.description,
+      }))}
+    />
+  ) : (
+    <EmptyState message="Projects will land here as I finish them." />
+  )}
+</BaseLayout>
