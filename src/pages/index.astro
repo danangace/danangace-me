@@ -262,10 +262,12 @@ const words = profile.passion.split(' ')
     flex-direction: column;
     gap: 0.4rem;
     margin-top: 1.5rem;
-    color: var(--accent);
+    color: var(--ink);
   }
   .tile-links a {
-    text-decoration: none;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    text-decoration-color: var(--muted);
   }
   .tile-links a:hover {
     text-decoration: underline;
