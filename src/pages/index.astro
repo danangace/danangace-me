@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
 import DMark from '../components/DMark.astro'
+import CloserLook from '../components/CloserLook.astro'
 import { profile } from '../data/profile'
 
 // Split the statement at build time so each word can light up on scroll.
@@ -35,51 +36,14 @@ const words = profile.passion.split(' ')
     </p>
   </section>
 
-  <section class="bento" aria-label="Work and stack">
-    <article class="tile tile-stack">
-      <h2>Daily tools</h2>
-      <ul class="big-list">
-        {profile.stack.map((s) => (
-          <li>
-            <a href={s.url} target="_blank" rel="noopener noreferrer">
-              {s.name}
-            </a>
-          </li>
-        ))}
-      </ul>
-      <p class="tile-note">
-        Written in{' '}
-        {profile.languages.map((l, i) => (
-          <>
-            {i > 0 && ' and '}
-            <a href={l.url} target="_blank" rel="noopener noreferrer">
-              {l.name}
-            </a>
-          </>
-        ))}
-        .
-      </p>
-    </article>
+  <CloserLook />
 
-    <article class="tile tile-work">
-      <h2>Building interfaces at</h2>
-      <a
-        class="work-link"
-        href={profile.work.url}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {profile.work.name}
-      </a>
-    </article>
-
-    <article class="tile tile-life">
-      <p>{profile.offline}</p>
-      <p class="tile-links">
-        <a href={profile.links.books}>Books I'm listing</a>
-        <a href={profile.links.tools}>Hardware and software I use</a>
-      </p>
-    </article>
+  <section class="life" aria-label="Outside of work">
+    <p>{profile.offline}</p>
+    <p class="life-links">
+      <a href={profile.links.books}>Books I'm listing</a>
+      <a href={profile.links.tools}>Hardware and software I use</a>
+    </p>
   </section>
 </BaseLayout>
 
@@ -213,114 +177,26 @@ const words = profile.passion.split(' ')
     }
   }
 
-  /* ---------- Uneven bento ---------- */
-  .bento {
-    display: grid;
-    grid-template-columns: 1.35fr 1fr;
-    grid-template-rows: auto auto;
-    gap: 0.75rem;
-    padding: 0 var(--gutter);
-  }
-  .tile {
-    border-radius: 1.75rem;
-    padding: clamp(1.5rem, 3vw, 2.75rem);
-    background: var(--surface);
-  }
-  .tile h2 {
-    font-size: 1rem;
-    font-weight: 500;
-    letter-spacing: -0.005em;
-    color: var(--muted);
-  }
-  .tile-stack {
-    grid-row: span 2;
-    min-height: 28rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    background: var(--tint);
-  }
-  .tile-stack .tile-note {
-    color: var(--muted);
-  }
-  .big-list {
-    list-style: none;
-    padding: 0;
-    margin: 2rem 0;
-    font-size: clamp(2rem, 4.2vw, 3.5rem);
-    color: var(--accent);
-    font-weight: 600;
-    line-height: 1.08;
-    letter-spacing: -0.03em;
-  }
-  .big-list a {
-    text-decoration: none;
-    transition: opacity 150ms ease-out;
-  }
-  .big-list:hover a {
-    opacity: 0.45;
-  }
-  .big-list a:hover {
-    opacity: 1;
-  }
-  .tile-note {
-    font-size: 1rem;
-  }
-  .tile-note a {
-    color: var(--ink);
-  }
-  .tile-work {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 3rem;
-  }
-  .work-link {
-    font-size: clamp(1.75rem, 3.2vw, 2.75rem);
-    font-weight: 600;
-    letter-spacing: -0.03em;
-    line-height: 1;
-    text-decoration: none;
-    color: var(--accent);
-  }
-  .work-link:hover {
-    text-decoration: underline;
-    text-decoration-thickness: 0.06em;
-    text-underline-offset: 0.12em;
-  }
-  .tile-life {
-    background: transparent;
-    padding-left: 0;
-    padding-right: 0;
+  /* ---------- Outside of work ---------- */
+  .life {
+    padding: clamp(4rem, 12vh, 8rem) var(--gutter) 0;
     font-size: clamp(1.1rem, 1.5vw, 1.35rem);
     line-height: 1.45;
     letter-spacing: -0.01em;
   }
-  .tile-life p {
-    max-width: 28rem;
+  .life p {
+    max-width: 30rem;
   }
-  .tile-links {
+  .life-links {
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
     margin-top: 1.5rem;
-    color: var(--ink);
   }
-  .tile-links a {
+  .life-links a {
+    width: fit-content;
     text-decoration: underline;
     text-underline-offset: 0.2em;
     text-decoration-color: var(--muted);
-  }
-  .tile-links a:hover {
-    text-decoration: underline;
-  }
-  @media (max-width: 760px) {
-    .bento {
-      grid-template-columns: 1fr;
-    }
-    .tile-stack {
-      grid-row: auto;
-      min-height: 26rem;
-    }
   }
 </style>
