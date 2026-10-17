@@ -6,7 +6,7 @@ import prettier from 'eslint-config-prettier'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist', '.astro', '.claude', '_legacy-nuxt', 'node_modules']),
+  globalIgnores(['dist', '.astro', '.claude', 'node_modules']),
   js.configs.recommended,
   tseslint.configs.recommended,
   astro.configs.recommended,

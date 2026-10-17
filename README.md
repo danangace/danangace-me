@@ -20,7 +20,23 @@ Personal website of Danang Putra Bahari, built with [Astro](https://astro.build)
 | `pnpm lint`    | Run ESLint                       |
 | `pnpm format`  | Format with Prettier             |
 
-## Migration note
+## Content
 
-`_legacy-nuxt/` holds the previous Nuxt 4 source for reference while content is
-ported. It is excluded from tooling and will be deleted at cutover.
+- Blog posts: `src/content/blogs/*.md`
+- Projects: `src/content/projects/*.md`
+- Books: `src/data/collections/books.json`
+- Tools: `src/data/collections/tools.json`
+
+Entries with `draft: true` show in `pnpm dev` and are left out of production.
+Schemas live in `src/content.config.ts`. Home page text lives in `src/data/profile.ts`.
+
+## Structure
+
+- `src/layouts/BaseLayout.astro`: head, SEO meta, nav, footer
+- `src/styles/global.css`: design tokens (light and dark)
+- `src/components/`: nav, footer, page header, list, empty state, logo mark
+- `src/pages/`: home, blogs, projects, books, tools, 404, `rss.xml`
+
+## Deploy
+
+Static output, so it runs on Vercel or Cloudflare Pages. Use Node 24 and `pnpm build`.
