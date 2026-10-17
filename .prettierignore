@@ -1,0 +1,5 @@
+dist
+.astro
+_legacy-nuxt
+pnpm-lock.yaml
+.claude

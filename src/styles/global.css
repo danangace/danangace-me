@@ -1,0 +1,14 @@
+@import 'tailwindcss';
+
+/*
+ * Design tokens live here (Tailwind v4 @theme). The visual direction is
+ * still being chosen, so these are neutral placeholders.
+ */
+@theme {
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  color-scheme: light dark;
+  -webkit-font-smoothing: antialiased;
+}
