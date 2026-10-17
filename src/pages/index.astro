@@ -1,9 +1,280 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
+import DMark from '../components/DMark.astro'
+import { profile } from '../data/profile'
+
+// Split the statement at build time so each word can light up on scroll.
+const words = profile.passion.split(' ')
 ---
 
 <BaseLayout>
-  <main class="grid min-h-dvh place-items-center">
-    <h1 class="text-4xl font-semibold tracking-tight">Danang Putra Bahari</h1>
-  </main>
+  <section class="hero">
+    <DMark class="hero-mark" />
+    <div class="hero-copy">
+      <h1>{profile.name}</h1>
+      <p>{profile.intro}</p>
+    </div>
+  </section>
+
+  <section class="statement" aria-label="What drives me">
+    <p class="reveal" style={`--n:${words.length}`}>
+      {words.map((w, i) => (
+        <>
+          <span style={`--i:${i}`}>{w}</span>{' '}
+        </>
+      ))}
+    </p>
+  </section>
+
+  <section class="bento" aria-label="Work and stack">
+    <article class="tile tile-stack">
+      <h2>Daily tools</h2>
+      <ul class="big-list">
+        {profile.stack.map((s) => (
+          <li>
+            <a href={s.url} target="_blank" rel="noopener noreferrer">
+              {s.name}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <p class="tile-note">
+        Written in{' '}
+        {profile.languages.map((l, i) => (
+          <>
+            {i > 0 && ' and '}
+            <a href={l.url} target="_blank" rel="noopener noreferrer">
+              {l.name}
+            </a>
+          </>
+        ))}
+        .
+      </p>
+    </article>
+
+    <article class="tile tile-work">
+      <h2>Building interfaces at</h2>
+      <a
+        class="work-link"
+        href={profile.work.url}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {profile.work.name}
+      </a>
+    </article>
+
+    <article class="tile tile-life">
+      <p>{profile.offline}</p>
+      <p class="tile-links">
+        <a href={profile.links.books}>Books I'm listing</a>
+        <a href={profile.links.tools}>Hardware and software I use</a>
+      </p>
+    </article>
+  </section>
 </BaseLayout>
+
+<style>
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: calc(100svh - var(--nav-height));
+    padding: 0 var(--gutter) clamp(2rem, 6vh, 4rem);
+    overflow: hidden;
+  }
+  :global(.hero-mark) {
+    position: absolute;
+    top: 6vh;
+    right: calc(var(--gutter) - 1rem);
+    height: min(66vh, 70vw);
+    color: var(--accent);
+  }
+  .hero-copy {
+    position: relative;
+  }
+  h1 {
+    font-size: clamp(3.5rem, 11.5vw, 11.5rem);
+    font-weight: 700;
+    line-height: 0.92;
+    letter-spacing: -0.048em;
+    max-width: 8ch;
+  }
+  .hero-copy p {
+    max-width: 30rem;
+    margin-top: 1.75rem;
+    font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+    color: var(--muted);
+  }
+
+  /* The one orchestrated moment: the three parts of the D settle into place. */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.hero-mark path) {
+      transform-box: fill-box;
+      animation: settle 1.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    :global(.hero-mark .bar) {
+      --from: translateY(-115%);
+    }
+    :global(.hero-mark .ring) {
+      --from: translateX(-35%) scale(0.92);
+      animation-delay: 120ms;
+    }
+    :global(.hero-mark .pill) {
+      --from: translateX(-260%);
+      animation-delay: 260ms;
+    }
+    @keyframes settle {
+      from {
+        transform: var(--from);
+        opacity: 0;
+      }
+      40% {
+        opacity: 1;
+      }
+      to {
+        transform: none;
+        opacity: 1;
+      }
+    }
+  }
+
+  /* ---------- Statement: words light up with scroll ---------- */
+  .statement {
+    padding: clamp(6rem, 24vh, 14rem) var(--gutter);
+  }
+  .reveal {
+    max-width: 21em;
+    font-size: clamp(1.9rem, 4.6vw, 4.25rem);
+    font-weight: 650;
+    line-height: 1.08;
+    letter-spacing: -0.034em;
+    text-wrap: pretty;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .reveal span {
+        opacity: 0.16;
+        animation: lit linear both;
+        animation-timeline: view();
+        animation-range: entry calc(var(--i) * (55% / var(--n)) + 8%) entry
+          calc(var(--i) * (55% / var(--n)) + 30%);
+      }
+      @keyframes lit {
+        to {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  /* ---------- Uneven bento ---------- */
+  .bento {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 0.75rem;
+    padding: 0 var(--gutter);
+  }
+  .tile {
+    border-radius: 1.75rem;
+    padding: clamp(1.5rem, 3vw, 2.75rem);
+    background: var(--surface);
+  }
+  .tile h2 {
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    color: var(--muted);
+  }
+  .tile-stack {
+    grid-row: span 2;
+    min-height: 34rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+  .tile-stack h2,
+  .tile-stack .tile-note {
+    color: color-mix(in srgb, var(--on-accent) 72%, transparent);
+  }
+  .big-list {
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0;
+    font-size: clamp(2.5rem, 6.4vw, 6rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.045em;
+  }
+  .big-list a {
+    text-decoration: none;
+    transition: opacity 150ms ease-out;
+  }
+  .big-list:hover a {
+    opacity: 0.45;
+  }
+  .big-list a:hover {
+    opacity: 1;
+  }
+  .tile-note {
+    font-size: 1rem;
+  }
+  .tile-work {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 3rem;
+  }
+  .work-link {
+    font-size: clamp(2rem, 4.4vw, 4rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    text-decoration: none;
+    color: var(--accent);
+  }
+  .work-link:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 0.06em;
+    text-underline-offset: 0.12em;
+  }
+  .tile-life {
+    background: transparent;
+    padding-left: 0;
+    padding-right: 0;
+    font-size: clamp(1.1rem, 1.5vw, 1.35rem);
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+  }
+  .tile-life p {
+    max-width: 28rem;
+  }
+  .tile-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-top: 1.5rem;
+    color: var(--accent);
+  }
+  .tile-links a {
+    text-decoration: none;
+  }
+  .tile-links a:hover {
+    text-decoration: underline;
+  }
+  @media (max-width: 760px) {
+    .bento {
+      grid-template-columns: 1fr;
+    }
+    .tile-stack {
+      grid-row: auto;
+      min-height: 26rem;
+    }
+  }
+</style>

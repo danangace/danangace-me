@@ -1,0 +1,56 @@
+---
+import { profile } from '../data/profile'
+---
+
+<footer class="contact" id="contact">
+  <p class="lead">Say hello</p>
+  <a class="mail" href={`mailto:${profile.email}`}>
+    {profile.email}
+  </a>
+  <p class="social">
+    {profile.socials.map((s) => (
+      <a href={s.url} target="_blank" rel="noopener noreferrer">
+        {s.label}
+      </a>
+    ))}
+  </p>
+</footer>
+
+<style>
+  .contact {
+    padding: clamp(6rem, 22vh, 12rem) var(--gutter) 3rem;
+  }
+  .lead {
+    color: var(--muted);
+    font-size: 1.1rem;
+  }
+  .mail {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: clamp(1.6rem, 6.4vw, 6rem);
+    font-weight: 700;
+    letter-spacing: -0.045em;
+    line-height: 1.05;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+    transition: color 150ms ease-out;
+  }
+  .mail:hover {
+    color: var(--accent);
+  }
+  .social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    margin-top: 3rem;
+    font-size: 0.9375rem;
+  }
+  .social a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 150ms ease-out;
+  }
+  .social a:hover {
+    color: var(--ink);
+  }
+</style>
