@@ -40,14 +40,45 @@ const {
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400..900&display=swap"
     />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Danang Putra Bahari - Blog"
+      href="/rss.xml"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Danang Putra Bahari" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={new URL(Astro.url.pathname, Astro.site)} />
+    <meta name="twitter:card" content="summary" />
     <title>{title}</title>
     <ClientRouter />
   </head>
   <body>
+    <a class="skip" href="#main">
+      Skip to content
+    </a>
     <Nav />
-    <main>
+    <main id="main">
       <slot />
     </main>
     <Footer />
   </body>
 </html>
+
+<style is:global>
+  .skip {
+    position: absolute;
+    left: 1rem;
+    top: -4rem;
+    z-index: 20;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    background: var(--ink);
+    color: var(--bg);
+  }
+  .skip:focus {
+    top: 0.75rem;
+  }
+</style>

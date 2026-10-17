@@ -1,2 +1,4 @@
-User-Agent: *
-Disallow:
+User-agent: *
+Disallow: /explore/
+
+Sitemap: https://danangace.me/sitemap-index.xml
