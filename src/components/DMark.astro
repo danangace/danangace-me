@@ -1,0 +1,31 @@
+---
+// The "D" from the existing logo, rebuilt on a 84x100 grid so each part can
+// be rendered alone and still line up when the parts are stacked.
+interface Props {
+  part?: 'bar' | 'ring' | 'pill' | 'all'
+  class?: string
+}
+
+const { part = 'all', class: className } = Astro.props
+const show = (p: string) => part === 'all' || part === p
+---
+
+<svg
+  viewBox="0 0 84 100"
+  fill="currentColor"
+  aria-hidden="true"
+  focusable="false"
+  class={className}
+  data-part={part}
+>
+  {show('bar') && <path class="bar" d="M8 8H26.25V92H8Z" />}
+  {show('ring') && (
+    <path
+      class="ring"
+      d="M33.5 8A42 42 0 0 1 33.5 92V75.2A25.2 25.2 0 0 0 33.5 24.8Z"
+    />
+  )}
+  {show('pill') && (
+    <path class="pill" d="M33.5 40.9H40.8A11 11 0 0 1 40.8 62.8H33.5Z" />
+  )}
+</svg>

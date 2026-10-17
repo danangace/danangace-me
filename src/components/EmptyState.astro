@@ -1,0 +1,31 @@
+---
+interface Props {
+  message: string
+}
+---
+
+<div class="empty">
+  <p>{Astro.props.message}</p>
+  <a href="/">Back home</a>
+</div>
+
+<style>
+  .empty {
+    padding: 0 var(--gutter);
+    min-height: 30vh;
+  }
+  p {
+    max-width: 28rem;
+    font-size: 1.25rem;
+    letter-spacing: -0.01em;
+  }
+  a {
+    display: inline-block;
+    margin-top: 1rem;
+    color: var(--accent);
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+</style>
