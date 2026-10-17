@@ -34,7 +34,7 @@ import { background } from '../data/background'
       >
         <h3 class="panel-title">{t.label}</h3>
         {t.entries.length ? (
-          <ul>
+          <ul class={`entries ${t.layout}`}>
             {t.entries.map((e) => (
               <li>
                 <div class="row">
@@ -54,6 +54,13 @@ import { background } from '../data/background'
                 </div>
                 {e.subtitle && <p class="sub">{e.subtitle}</p>}
                 {e.note && <p class="note">{e.note}</p>}
+                {e.points && (
+                  <ul class="points">
+                    {e.points.map((pt) => (
+                      <li>{pt}</li>
+                    ))}
+                  </ul>
+                )}
               </li>
             ))}
           </ul>
@@ -172,18 +179,35 @@ import { background } from '../data/background'
   }
 
   /* Panel content: two columns when there is room, so long lists stay short. */
-  ul {
+  .entries {
     list-style: none;
     margin: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
+    grid-template-columns: 1fr;
     gap: 0 clamp(1.5rem, 5vw, 4rem);
     padding: clamp(1rem, 2vw, 1.75rem) clamp(1.25rem, 3vw, 2.5rem);
     border-radius: clamp(1.25rem, 2.4vw, 1.75rem);
     background: var(--surface);
   }
-  li {
-    padding: 1.1rem 0;
+  .entries.grid {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+  }
+  .entries > li {
+    padding: 1.25rem 0;
+  }
+  .entries.list > li + li {
+    border-top: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  }
+  .points {
+    list-style: disc;
+    max-width: 46rem;
+    margin: 0.85rem 0 0;
+    padding: 0 0 0 1.1rem;
+    display: grid;
+    gap: 0.4rem;
+  }
+  .points li {
+    padding: 0;
   }
   .row {
     display: flex;
