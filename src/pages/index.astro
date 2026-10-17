@@ -136,18 +136,16 @@ const words = profile.passion.split(' ')
     text-underline-offset: 0.2em;
   }
 
-  /* The "video" slot: a big rounded stage that holds the animated logo. */
+  /* The "video" slot: edge to edge, same canvas as the page, holds the logo. */
   .stage {
     display: grid;
     place-items: center;
-    height: clamp(22rem, 74vh, 46rem);
-    margin-top: clamp(2rem, 6vh, 3.5rem);
-    border-radius: clamp(1.25rem, 2.4vw, 2rem);
-    background: var(--surface);
+    height: clamp(18rem, 56vh, 34rem);
+    margin: clamp(1.5rem, 5vh, 3rem) calc(var(--gutter) * -1) 0;
     overflow: hidden;
   }
   :global(.hero-mark) {
-    height: 58%;
+    height: 42%;
     color: var(--accent);
   }
 
