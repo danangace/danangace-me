@@ -189,12 +189,21 @@ const words = profile.passion.split(' ')
   }
   @media (prefers-reduced-motion: no-preference) {
     @supports (animation-timeline: view()) {
+      /* One timeline for the whole paragraph; each word takes its own slice of
+         the scroll distance, so words light up in reading order. */
+      .reveal {
+        view-timeline: --reveal block;
+      }
       .reveal span {
         opacity: 0.16;
-        animation: lit linear both;
-        animation-timeline: view();
-        animation-range: entry calc(var(--i) * (55% / var(--n)) + 8%) entry
-          calc(var(--i) * (55% / var(--n)) + 30%);
+        /* Longhands on purpose: the minifier folds them into an `animation: … view()`
+           shorthand that Chrome drops. */
+        animation-name: lit;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: --reveal;
+        animation-range: cover calc(6% + var(--i) * (34% / var(--n))) cover
+          calc(14% + var(--i) * (34% / var(--n)));
       }
       @keyframes lit {
         to {
