@@ -196,18 +196,17 @@ const words = profile.passion.split(' ')
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background: var(--accent);
-    color: var(--on-accent);
+    background: var(--tint);
   }
-  .tile-stack h2,
   .tile-stack .tile-note {
-    color: color-mix(in srgb, var(--on-accent) 86%, transparent);
+    color: var(--muted);
   }
   .big-list {
     list-style: none;
     padding: 0;
     margin: 2rem 0;
     font-size: clamp(2.5rem, 6.4vw, 6rem);
+    color: var(--accent);
     font-weight: 700;
     line-height: 1;
     letter-spacing: -0.045em;
@@ -224,6 +223,9 @@ const words = profile.passion.split(' ')
   }
   .tile-note {
     font-size: 1rem;
+  }
+  .tile-note a {
+    color: var(--ink);
   }
   .tile-work {
     display: flex;
