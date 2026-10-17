@@ -54,6 +54,16 @@ import { background } from '../data/background'
                 </div>
                 {e.subtitle && <p class="sub">{e.subtitle}</p>}
                 {e.note && <p class="note">{e.note}</p>}
+                {e.url && e.linkLabel && (
+                  <a
+                    class="cta"
+                    href={e.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {e.linkLabel} <span aria-hidden="true">↗</span>
+                  </a>
+                )}
                 {e.points && (
                   <ul class="points">
                     {e.points.map((pt) => (
@@ -197,6 +207,18 @@ import { background } from '../data/background'
   }
   .entries.list > li + li {
     border-top: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  }
+  .cta {
+    display: inline-block;
+    margin-top: 0.6rem;
+    font-size: 0.9375rem;
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--muted);
+    text-underline-offset: 0.2em;
+  }
+  .cta:hover {
+    color: var(--muted);
   }
   .points {
     font-size: 0.9375rem;

@@ -10,6 +10,7 @@ export interface Entry {
   note?: string
   points?: string[]
   url?: string
+  linkLabel?: string
 }
 
 export interface Tab {
@@ -115,6 +116,7 @@ export const background: Tab[] = [
         period: 'Issued Dec 2025',
         note: 'Expires Dec 2028 · Credential ID 78cc4f1b1adc480a8c6032b0df4f402b',
         url: 'https://cp.certmetrics.com/amazon/en/public/verify/credential/78cc4f1b1adc480a8c6032b0df4f402b',
+        linkLabel: 'Verify credential',
       },
       {
         title: 'Fullstack JavaScript Developer',
